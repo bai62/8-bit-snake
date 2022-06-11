@@ -12,6 +12,6 @@ This is a `8-bit` themed game of `SNAKE`.
 
 ## INSTRUCTIONS
 
-- Type `python run.py` and press enter to run the program.
+- Type `python start.py` and press enter to run the program.
 - Log in or register an account in the window
 - After logging in, press `enter` to start the game

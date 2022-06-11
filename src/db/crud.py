@@ -1,6 +1,6 @@
 from tinydb import TinyDB,where
 
-usrtb=TinyDB('db/user.json').table('user')
+usrtb=TinyDB('src/db/user.json').table('user')
 
 def add(username,password,highscore):
     usrtb.insert({'username':username,'password':password,'high score':highscore})

@@ -10,7 +10,7 @@ screen = pygame.display.set_mode(wd_size)
 pygame.display.set_caption("贪吃蛇")
 
 
-welcome_font1 = pygame.font.Font('font/8-bit.ttf', 110)
+welcome_font1 = pygame.font.Font('src/font/8-bit.ttf', 110)
 
 screen.fill(bg_color)
 st_time = time.time()

@@ -5,7 +5,7 @@ from src.locals import *
 from src.game import *
 import pygame.locals
 import pygame.freetype
-from db.crud import *
+from src.db.crud import *
 
 size=width,height=566,565#与下面的图片的大小，如果不一致会导致图片显示不完全，或者产生缝隙
 black=0,0,0
@@ -16,7 +16,7 @@ pygame.display.set_caption("贪吃蛇")#窗口名字
 
 player_name=''
 # f1 = pygame.freetype.Font('font/8-bit.ttf', size=50)#调出文字的字体
-txt_font1 = pygame.font.Font('font/8-bit.ttf', 36)
+txt_font1 = pygame.font.Font('src/font/8-bit.ttf', 36)
 
 usrx,usry=pot_2_pos(Point(4,4))
 pswx,pswy=pot_2_pos(Point(4,6))
@@ -36,7 +36,7 @@ errbw,errbh=2*gd_size,1.2*gd_size
 
 #pygame.draw.rect(screen, WHITESMOKE, (230, 210, 200, 35))
 a,b=[],[]#创建两个空列表，用来分别存储用户名和密码
-logo = pygame.image.load("UI/logo.png").convert_alpha()
+logo = pygame.image.load("src/UI/logo.png").convert_alpha()
 
 def alert(str1,str2,str3):
     pygame.draw.rect(screen, bg_color, (errgx, errgy, errgw, errgh))
@@ -101,7 +101,11 @@ def register():
                 elif pswgx <= mouse_x <= pswgx + infgw and pswgy <= mouse_y <= pswgy + infgh:
                     wz = False
                 elif lgngx <= mouse_x <= lgngx + rgsgw and lgngy <= mouse_y < lgngy + rgsgh:
-                    if check_name(str_a):  # 查库
+                    if str_a == "":
+                        err_wa('username is empty.','','ok')
+                    elif str_b == "":
+                        err_wa("password is empty.",'','ok')
+                    elif check_name(str_a):  # 查库
                         err_wa("this's a already", "taken name.", "ok")
                         a, b, wz = [], [], True
                     else:
@@ -150,6 +154,10 @@ while log:
                         err_wa('login success','','ok')
                         #登录成功
                         log,player_name = False,str_a
+                    if str_a == "":
+                        err_wa('username is empty.','','ok')
+                    elif str_b == "":
+                        err_wa("password is empty.",'','ok')
                     else:
                         err_wa("wrong username or","password.","ok")
                         a,b,wz=[],[],True
