@@ -110,6 +110,8 @@ def register():
                         a, b, wz = [], [], True
                     else:
                         add(str_a,str_b,0)
+
+                        global player_name
                         player_name=str_a
                         err_wa("Registration success.","","ok")
                         flag = False
