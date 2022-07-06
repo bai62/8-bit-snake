@@ -24,28 +24,31 @@ def end_score(score,high_score):
     if score > high_score:
         upd_score(player_name,score)
 
-def init_snake():
-    xx,yy=(gm_W)/2/25,0
-    snake=deque()
-    snake.append(Point(xx,yy+2))
-    snake.append(Point(xx,yy+1))
-    snake.append(Point(xx,yy))
-    return snake
+class Init_snake():
+    def init_snake(self):
+        xx,yy=(gm_W)/2/25,0
+        snake=deque()
+        snake.append(Point(xx,yy+2))
+        snake.append(Point(xx,yy+1))
+        snake.append(Point(xx,yy))
+        return snake
 
-def draw_snake(snake):
-    for s in snake:
-        pos_x,pos_y=pot_2_pos(s)
-        pygame.draw.rect(screen,snake_color,(pos_x,pos_y,gd_size,gd_size))
+class Draw_snake():
+    def draw_snake(self,snake):
+        for s in snake:
+            pos_x,pos_y=pot_2_pos(s)
+            pygame.draw.rect(screen,snake_color,(pos_x,pos_y,gd_size,gd_size))
 
-def draw_food(food):
-    pos_x, pos_y = pot_2_pos(Point(food.x, food.y))
-    pos_x += gd_size / 2
-    pos_y += gd_size / 2
-    pygame.draw.circle(screen,food_color,(pos_x,pos_y),gd_size/2)
+class Draw_food():
+    def draw_food(self,food):
+        pos_x, pos_y = pot_2_pos(Point(food.x, food.y))
+        pos_x += gd_size / 2
+        pos_y += gd_size / 2
+        pygame.draw.circle(screen,food_color,(pos_x,pos_y),gd_size/2)
 
 
-
-snake = init_snake()
+isk = Init_snake()
+snake = isk.init_snake()
 food = create_food(snake)
 high_score = get_score(player_name)
 
@@ -69,7 +72,8 @@ while True:
                 if game_over:
                     score, speed, game_over,game_start, lk = 0, orispeed, False, True,True
                     last_move_time = time.time()
-                    snake = init_snake()
+                    isk=Init_snake()
+                    snake = isk.init_snake()
                     food = create_food(snake)
                     high_score = get_score(player_name)
                     pos=(0,1)
@@ -102,8 +106,10 @@ while True:
 
     screen.fill(bg_color)
     pygame.draw.rect(screen, line_color, (gm_x1,gm_y1, gm_W, gm_H),2)#可以改为最后画线
-    draw_snake(snake)
-    draw_food(food)
+    #实例化画蛇类和画食物类
+    ds,df=Draw_snake(),Draw_food()
+    ds.draw_snake(snake)
+    df.draw_food(food)
 
 
     fwidth, fheight = txt_font2.size('GAME OVER')
