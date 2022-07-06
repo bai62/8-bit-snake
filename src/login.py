@@ -38,57 +38,62 @@ errbw,errbh=2*gd_size,1.2*gd_size
 a,b=[],[]#创建两个空列表，用来分别存储用户名和密码
 logo = pygame.image.load("src/UI/logo.png").convert_alpha()
 
-def alert(str1,str2,str3):
-    pygame.draw.rect(screen, bg_color, (errgx, errgy, errgw, errgh))
-    pygame.draw.rect(screen, line_color, (errgx, errgy, errgw, errgh), 2)
-    pygame.draw.rect(screen, bg_color, (errbx, errby, errbw, errbh))
-    pygame.draw.rect(screen, line_color, (errbx, errby, errbw, errbh), 2)
-    Print_Txt(screen,txt_font1,errgx+gd_size,errgy+gd_size,str1)
-    Print_Txt(screen,txt_font1,errgx+gd_size,errgy+2.2*gd_size,str2)
-    Print_Txt(screen,txt_font1,errbx+8,errby+6,str3)
-    pygame.display.update()
+class Alert():
+    def alert(self,str1,str2,str3):
+        global  pygame,screen
+        pygame.draw.rect(screen, bg_color, (errgx, errgy, errgw, errgh))
+        pygame.draw.rect(screen, line_color, (errgx, errgy, errgw, errgh), 2)
+        pygame.draw.rect(screen, bg_color, (errbx, errby, errbw, errbh))
+        pygame.draw.rect(screen, line_color, (errbx, errby, errbw, errbh), 2)
+        Print_Txt(screen,txt_font1,errgx+gd_size,errgy+gd_size,str1)
+        Print_Txt(screen,txt_font1,errgx+gd_size,errgy+2.2*gd_size,str2)
+        Print_Txt(screen,txt_font1,errbx+8,errby+6,str3)
+        pygame.display.update()
 
-def err_wa(str1,str2,str3):
-    alert(str1,str2,str3)
+class Err_wa(Alert):
+    def err_wa(self,str1,str2,str3):
+        global pygame
+        super().alert(str1,str2,str3)
+        flag=1
+        while flag:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.locals.MOUSEBUTTONDOWN:
+                    mouse_x, mouse_y = pygame.mouse.get_pos()
+                    if errbx <= mouse_x <= errbx + errbw and errby <= mouse_y <= errby + errbh:
+                        flag=0
 
-    flag=1
-    while flag:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                exit()
-            elif event.type == pygame.locals.MOUSEBUTTONDOWN:
-                mouse_x, mouse_y = pygame.mouse.get_pos()
-                if errbx <= mouse_x <= errbx + errbw and errby <= mouse_y <= errby + errbh:
-                    flag=0
+class Usr_psw_init():
+    def usr_psw_init(self):
+        global screen,pygame
+        screen.fill(bg_color)
+        pygame.draw.rect(screen, line_color, (gm_x1, gm_y1, gm_W, gm_H), 2)
+        Print_Txt(screen, txt_font1, usrx, usry, "username")
+        Print_Txt(screen, txt_font1, pswx, pswy, "password")
+        pygame.draw.rect(screen, line_color, (usrgx, usrgy, infgw, infgh), 2)
+        pygame.draw.rect(screen, line_color, (pswgx, pswgy, infgw, infgh), 2)
 
+        screen.blit(logo, (600, 330))
+class Login_init(Usr_psw_init):
+    def login_init(self):
+        super().usr_psw_init()
+        Print_Txt(screen,txt_font1,rgsgx+5,rgsgy+6,"register")
+        Print_Txt(screen,txt_font1,lgngx+5,lgngy+6,"login")
+        pygame.draw.rect(screen, line_color, (rgsgx, rgsgy, rgsgw, rgsgh), 2)
+        pygame.draw.rect(screen, line_color, (lgngx, lgngy, lgngw, lgngh), 2)
 
-def usr_psw_init():
-    screen.fill(bg_color)
-    pygame.draw.rect(screen, line_color, (gm_x1, gm_y1, gm_W, gm_H), 2)
-    Print_Txt(screen, txt_font1, usrx, usry, "username")
-    Print_Txt(screen, txt_font1, pswx, pswy, "password")
-    pygame.draw.rect(screen, line_color, (usrgx, usrgy, infgw, infgh), 2)
-    pygame.draw.rect(screen, line_color, (pswgx, pswgy, infgw, infgh), 2)
-
-    screen.blit(logo, (600, 330))
-
-def login_init():
-    usr_psw_init()
-    Print_Txt(screen,txt_font1,rgsgx+5,rgsgy+6,"register")
-    Print_Txt(screen,txt_font1,lgngx+5,lgngy+6,"login")
-    pygame.draw.rect(screen, line_color, (rgsgx, rgsgy, rgsgw, rgsgh), 2)
-    pygame.draw.rect(screen, line_color, (lgngx, lgngy, lgngw, lgngh), 2)
-
-
-def register_init():
-    usr_psw_init()
-    Print_Txt(screen, txt_font1, lgngx + 5, lgngy + 6, "register")
-    pygame.draw.rect(screen, line_color, (lgngx, lgngy, rgsgw, rgsgh), 2)
+class Register_init(Usr_psw_init):
+    def register_init(self):
+        super().usr_psw_init()
+        Print_Txt(screen, txt_font1, lgngx + 5, lgngy + 6, "register")
+        pygame.draw.rect(screen, line_color, (lgngx, lgngy, rgsgw, rgsgh), 2)
 
 def register():
     flag,wz=True,True
     a, b = [], []
+    ew=Err_wa()
     while flag:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -102,18 +107,18 @@ def register():
                     wz = False
                 elif lgngx <= mouse_x <= lgngx + rgsgw and lgngy <= mouse_y < lgngy + rgsgh:
                     if str_a == "":
-                        err_wa('username is empty.','','ok')
+                        ew.err_wa('username is empty.','','ok')
                     elif str_b == "":
-                        err_wa("password is empty.",'','ok')
+                        ew.err_wa("password is empty.",'','ok')
                     elif check_name(str_a):  # 查库
-                        err_wa("this's a already", "taken name.", "ok")
+                        ew.err_wa("this's a already", "taken name.", "ok")
                         a, b, wz = [], [], True
                     else:
                         add(str_a,str_b,0)
 
                         global player_name
                         player_name=str_a
-                        err_wa("Registration success.","","ok")
+                        ew.err_wa("Registration success.","","ok")
                         flag = False
             elif event.type == pygame.KEYDOWN:  # 检测按键是否是数字键，通过打印输出判断按键的码
                 if 48 <= event.key <= 57:
@@ -121,7 +126,8 @@ def register():
                         a.append(event.key - 48)
                     elif wz == False and len(b) < 11:
                         b.append(event.key - 48)
-        register_init()
+        ri=Register_init()
+        ri.register_init()
         str_a = ""  # 将输入内容存储到列表
         for i in a:
             str_a += str(i)  # 转化拼接为字符串
@@ -136,6 +142,7 @@ def register():
         pygame.display.update()
 
 log,wz = True,True
+ew=Err_wa()
 while log:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -153,15 +160,16 @@ while log:
             elif lgngx <= mouse_x <= lgngx+lgngw and lgngy <= mouse_y < lgngy+lgngh:
                   #  if crud.check:# 查库
                     if check_info(str_a,str_b):
-                        err_wa('login success','','ok')
+                        ew.err_wa('login success','','ok')
                         #登录成功
                         log,player_name = False,str_a
                     if str_a == "":
-                        err_wa('username is empty.','','ok')
+                        ew.err_wa('username is empty.','','ok')
                     elif str_b == "":
-                        err_wa("password is empty.",'','ok')
+                        ew.err_wa("password is empty.",'','ok')
                     else:
-                        err_wa("wrong username or","password.","ok")
+                        if log:
+                            ew.err_wa("wrong username or","password.","ok")
                         a,b,wz=[],[],True
 
         elif event.type == pygame.KEYDOWN:#检测按键是否是数字键，通过打印输出判断按键的码
@@ -172,7 +180,8 @@ while log:
                     b.append(event.key-48)
 
     #预处理和动态文字放在一起
-    login_init()
+    li=Login_init()
+    li.login_init()
 
     str_a=""#将输入内容存储到列表
     for i in a:
